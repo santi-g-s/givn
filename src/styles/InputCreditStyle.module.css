@@ -1,0 +1,56 @@
+
+.form {
+  width: 330px;
+  margin: 0 auto;
+}
+
+.form-field {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  background: white;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 0 3px 0px rgba(0, 0, 0, .3);
+  padding: 0 10px;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.form-field-group {
+  display: flex;
+  flex-flow: wrap;
+}
+
+.form-field-group div {
+  flex: 0 0 50%;
+}
+
+.form-field-group div:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.form-field-group div:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.form-button {
+  border: 1px solid #1f8ab0;
+  background-color: #3b495c;
+  border-color: #3b495c;
+  color: #ced5e0;
+  font-family: inherit;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 35px;
+  width: 100%;
+}
+
+.cc-amount-money {
+  margin: 5px 0;
+  font-size: 30px;
+  color: #333;
+}

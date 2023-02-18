@@ -19,6 +19,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/InputCredit.jsx", "src/pages/payment.jsx", "src/pages/payment.jsx"],
   "exclude": ["node_modules"]
 }
