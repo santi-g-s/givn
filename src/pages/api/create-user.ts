@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getUserFromCookies } from "next-firebase-auth";
+import { verifyIdToken } from "next-firebase-auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { FieldValue } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 
 type Data = {
   user: any | null;
@@ -12,7 +13,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const user = await getUserFromCookies({ req, includeToken: true });
+  const user = await verifyIdToken(req.body.idToken);
 
   if (!user) {
     return res.status(401).json({ error: "Unauthorized", user: null });
@@ -20,27 +21,36 @@ export default async function handler(
 
   const db = getFirestore();
 
-  console.log("REQ BODY", req.body);
+  const cityDoc = await db.collection("city").doc("875491").get();
+  const cityData = cityDoc.data();
 
-  const userDoc = await db
-    .collection(req.body.city)
-    .doc(req.body.user?.id)
+  await db
+    .collection("city")
+    .doc("875491")
+    .collection("users")
+    .doc(user?.id || "")
     .set({
-      userId: req.body.user?.id,
+      userId: user?.id || "",
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email || "",
-      countryCode: req.body.countryCode || "",
-      phone: req.body.phoneNumber || "",
-      address: req.body.address || "",
-      shippingAddress: req.body.shippingAddress || "",
-      dateOfBirth: req.body.dateOfBirth || "",
+      countryCode: "1",
+      phone: req.body.phone || cityData?.phone || "",
+      address: cityData?.address || "",
+      shippingAddress: cityData?.address || "",
+      dateOfBirth: Timestamp.fromDate(new Date(req.body.birthday)),
       bio: "",
       pfpURL: "",
       role: "user",
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     });
+  const resUser = await db
+    .collection("city")
+    .doc("875491")
+    .collection("users")
+    .doc(user?.id || "")
+    .get();
 
-  res.status(200).json({ user: userDoc });
+  res.status(200).json({ user: resUser.data() });
 }

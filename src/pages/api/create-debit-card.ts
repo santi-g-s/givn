@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Card, Unit, UnitResponse } from "@unit-finance/unit-node-sdk";
-import { getUserFromCookies } from "next-firebase-auth";
+import { verifyIdToken } from "next-firebase-auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { FieldValue } from "firebase-admin/firestore";
 
@@ -13,7 +13,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const user = await getUserFromCookies({ req, includeToken: true });
+  const user = await verifyIdToken(req.body.idToken);
 
   if (!user) {
     return res.status(401).json({ error: "Unauthorized", card: null });
@@ -36,22 +36,29 @@ export default async function handler(
         last: req.body.lastName,
       },
       dateOfBirth: req.body.dateOfBirth,
-      shippingAddress: req.body.shippingAddress,
+      shippingAddress: req.body.address,
       address: req.body.address,
       phone: {
         countryCode: req.body.countryCode,
-        number: req.body.phoneNumber,
+        number: req.body.phone,
       },
       email: req.body.email,
     },
     relationships: {
-      account: req.body.accountId,
+      account: {
+        data: {
+          type: "depositAccount",
+          id: req.body.accountId,
+        },
+      },
     },
   });
 
   await db
-    .collection(req.body.city)
-    .doc(req.body.user?.id)
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
+    .doc(user?.id || "")
     .collection("finance")
     .doc(user.id + "_" + card.data.id)
     .set({
