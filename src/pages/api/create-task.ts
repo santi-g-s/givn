@@ -17,7 +17,7 @@ export default async function handler(
 
   const userDoc = await db
     .collection(req.body.city)
-    .doc(req.body.user?.id)
+    .doc(user?.id || "")
     .get();
   const userData = userDoc.data();
 
