@@ -4,6 +4,7 @@ import { HeaderResponsive } from '../components/dashboard/header';
 import AccountPage from '@/components/dashboard/accountPage';
 import ProfilePage from '@/components/dashboard/profilePage';
 import CardsPage from '@/components/dashboard/cards';
+import { ActionsGrid } from '@/components/dashboard/learn';
 import { IconBuildingBank, IconCreditCard, IconBooks } from '@tabler/icons-react';
 
 export default function Shell() {
@@ -32,7 +33,7 @@ export default function Shell() {
         active == "/dashboard/account" ? (<AccountPage customerID={customerID}/>) : 
         active == "/dashboard/profile" ? (<ProfilePage />):
         active == "/dashboard/cards" ? (<CardsPage customerID={customerID}/>): 
-        (<div></div>)
+        (<ActionsGrid />)
       }
       
     </AppShell>
