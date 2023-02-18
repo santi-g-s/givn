@@ -12,6 +12,7 @@ import {
   UserCredential,
   verifyBeforeUpdateEmail,
   sendPasswordResetEmail,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 import { auth } from "../firebase";
@@ -29,6 +30,7 @@ interface AuthContextProps {
   updatePasswordWithReset: (code: string, password: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   currentUser: User | null;
+  signup: (email: string, password: string) => Promise<UserCredential>;
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -49,6 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function emailLogin(email: string, password: string) {
     return login(email, password);
+  }
+
+  function signup(email: string, password: string) {
+    return createUserWithEmailAndPassword(auth, email, password);
   }
 
   async function logout() {
@@ -75,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       changeVerificationEmail,
       emailLogin,
+      signup,
       logout,
       resendEmailVerification,
       updatePasswordWithReset,
