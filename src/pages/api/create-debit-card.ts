@@ -50,7 +50,9 @@ export default async function handler(
   });
 
   await db
-    .collection(req.body.city)
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
     .doc(req.body.user?.id)
     .collection("finance")
     .doc(user.id + "_" + card.data.id)

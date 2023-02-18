@@ -22,18 +22,23 @@ export default async function handler(
 
   console.log("REQ BODY", req.body);
 
+  const cityDoc = await db.collection("city").doc(req.body.cityId).get();
+  const cityData = cityDoc.data();
+
   const userDoc = await db
-    .collection(req.body.city)
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
     .doc(req.body.user?.id)
     .set({
       userId: req.body.user?.id,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email || "",
-      countryCode: req.body.countryCode || "",
+      countryCode: cityData?.countryCode || "",
       phone: req.body.phoneNumber || "",
-      address: req.body.address || "",
-      shippingAddress: req.body.shippingAddress || "",
+      address: cityData?.address || "",
+      shippingAddress: cityData?.address || "",
       dateOfBirth: req.body.dateOfBirth || "",
       bio: "",
       pfpURL: "",

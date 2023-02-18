@@ -42,15 +42,20 @@ export default async function handler(
 
   const db = getFirestore();
 
-  await db.collection(req.body.city).doc(req.body.user?.id).set(
-    {
-      accountId: account.data.id,
-      updatedAt: FieldValue.serverTimestamp(),
-    },
-    {
-      merge: true,
-    }
-  );
+  await db
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
+    .doc(req.body.user?.id)
+    .set(
+      {
+        accountId: account.data.id,
+        updatedAt: FieldValue.serverTimestamp(),
+      },
+      {
+        merge: true,
+      }
+    );
 
   res.status(200).json({ account });
 }

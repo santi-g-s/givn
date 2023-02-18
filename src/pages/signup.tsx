@@ -4,12 +4,15 @@ import Link from "next/link";
 import { PasswordInput, TextInput } from "@mantine/core";
 import { Inter } from "@next/font/google";
 import { withAuthUser, AuthAction } from "next-firebase-auth";
+import { DatePicker } from "@mantine/dates";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [birthday, setBirthday] = useState<null | Date>(null);
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
   function handleSignup(e: any) {
     e.preventDefault();
@@ -29,6 +32,7 @@ const SignupPage = () => {
           <div className="flex flex-col gap-y-2 md:gap-y-4">
             <div className="flex flex-row gap-x-2">
               <TextInput
+                required
                 label="First Name"
                 placeholder="First Name"
                 value={firstName}
@@ -36,6 +40,7 @@ const SignupPage = () => {
                 type="text"
               />
               <TextInput
+                required
                 label="Last Name"
                 placeholder="Last Name"
                 value={lastName}
@@ -43,7 +48,17 @@ const SignupPage = () => {
                 type="email"
               />
             </div>
+            <DatePicker
+              required
+              placeholder="Date of Birth"
+              label="Date of Birth"
+              value={birthday}
+              onChange={setBirthday}
+              clearable
+              maxDate={new Date()}
+            />
             <TextInput
+              required
               label="Email"
               placeholder="Email"
               value={email}
@@ -51,10 +66,18 @@ const SignupPage = () => {
               type="email"
             />
             <PasswordInput
+              required
               label="Password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+            <TextInput
+              label="Phone"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.currentTarget.value)}
+              type="text"
             />
             <button
               onClick={() => {}}

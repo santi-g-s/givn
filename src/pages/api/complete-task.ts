@@ -21,7 +21,9 @@ export default async function handler(
   console.log("REQ BODY", req.body);
 
   const taskRef = db
-    .collection(req.body.city)
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
     .doc(user?.id || "")
     .collection("tasks")
     .doc(req.body.taskId);
@@ -29,7 +31,9 @@ export default async function handler(
   const taskData = taskDoc.data();
 
   const cardRef = db
-    .collection(req.body.city)
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
     .doc(user?.id || "")
     .collection("cards")
     .doc(req.body.cardId);

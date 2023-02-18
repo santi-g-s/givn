@@ -16,7 +16,7 @@ export default async function handler(
   const db = getFirestore();
 
   const userDoc = await db
-    .collection(req.body.city)
+    .collection("city")
     .doc(user?.id || "")
     .get();
   const userData = userDoc.data();
@@ -28,7 +28,11 @@ export default async function handler(
   console.log("REQ BODY", req.body);
 
   const task = await db
-    .collection(req.body.city)
+    .collection("city")
+    .doc(req.body.cityId)
+    .collection("users")
+    .doc(req.body.cityId)
+    .collection("users")
     .doc(req.body.user?.id)
     .collection("tasks")
     .doc(req.body.taskId)
