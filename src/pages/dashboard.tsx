@@ -9,14 +9,14 @@ import { IconBuildingBank, IconCreditCard, IconBooks } from '@tabler/icons-react
 export default function Shell() {
 
   const links = [
-    { "link": "/dashboard/account", "label": "Accounts", icon: <IconBuildingBank />},
+    { "link": "/dashboard/account", "label": "Account", icon: <IconBuildingBank />},
     { "link": "/dashboard/cards", "label": "Cards", icon: <IconCreditCard /> },
     { "link": "/dashboard/learn", "label": "Learn", icon: <IconBooks />}
   ]
 
   const [active, setActive] = useState(links[0].link);
 
-  const customerID = "875223"
+  const customerID = "860309"
 
   return (
     <AppShell

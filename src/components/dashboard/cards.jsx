@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Container, Grid } from '@mantine/core';
 import Script from 'next/script'
 import axios from "axios"
 
@@ -8,7 +9,7 @@ export default function CardsPage(props) {
 
   const customerID = props.customerID;
 
-  const [cardID, setCardID] = useState('');
+  const [cardIDs, setCardIDs] = useState([]);
 
   const fetchData = async () => {
     const res =  await axios.get(`${process.env.NEXT_PUBLIC_UNIT_API_URL}/cards/?filter[customerId]=${customerID}`, {
@@ -16,8 +17,7 @@ export default function CardsPage(props) {
         'Authorization': 'Bearer '+ process.env.NEXT_PUBLIC_UNIT_TOKEN
       }
     })
-    setCardID(res.data.data[0].id);
-    console.log(res.data.data[0].id);
+    setCardIDs(res.data.data)
   }
 
   useEffect(() => {
@@ -26,21 +26,26 @@ export default function CardsPage(props) {
   );
 
   return (
-    <>
-        <Script src="https://ui.s.unit.sh/components.js" />
-        {
-          cardID != '' ? 
-          (
-            <unit-elements-card
-              card-id={cardID}
-              customer-token={process.env.NEXT_PUBLIC_UNIT_TOKEN}
-              theme=""
-            >
-            </unit-elements-card>
-          ) : (<div></div>)
-        }
-        
-        
-    </>
+    <Container my="xl">
+      <Script src="https://ui.s.unit.sh/components.js" />
+        <Grid>
+          {
+            cardIDs.map(function(card){
+              
+                return <Grid.Col span={6}>
+                        <unit-elements-card
+                          card-id={card.id}
+                          customer-token={process.env.NEXT_PUBLIC_UNIT_TOKEN}
+                          theme=""
+                          key={card.id}
+                          hide-sensitive-data-button="true"
+                        >
+                        </unit-elements-card>
+                      </Grid.Col>; 
+              
+            })
+          }
+        </Grid>
+    </Container>
   );
 }

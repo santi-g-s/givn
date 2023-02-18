@@ -51,7 +51,7 @@ export default function AccountPage({customerID} : AccountPageProps) {
           </>
         ) : 
         (
-          <Container>
+          <Container mt='xl'>
             <Skeleton height={8} mt={6} radius="sm" width="10%"/>
             <Skeleton height={50} mt={6} radius="sm" width="30%" />
 
