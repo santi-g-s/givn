@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getUserFromCookies } from "next-firebase-auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { FieldValue } from "firebase-admin/firestore";
 
@@ -12,7 +13,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const user = await getUserFromCookies({ req, includeToken: true });
+  const auth = getAuth();
+  const user = await createUserWithEmailAndPassword(
+    auth,
+    req.body.email,
+    req.body.password
+  );
 
   if (!user) {
     return res.status(401).json({ error: "Unauthorized", user: null });
@@ -20,7 +26,7 @@ export default async function handler(
 
   const db = getFirestore();
 
-  console.log("REQ BODY", req.body);
+  console.log("REQ BODY", req.body.dateOfBirth);
 
   const cityDoc = await db.collection("city").doc("1006131").get();
   const cityData = cityDoc.data();
