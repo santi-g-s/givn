@@ -4,14 +4,12 @@ import Link from "next/link";
 import { PasswordInput, TextInput } from "@mantine/core";
 import { Inter } from "@next/font/google";
 import { withAuthUser, AuthAction } from "next-firebase-auth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  function handleLogin(e: any) {
-    e.preventDefault();
-  }
+  const auth = useAuth();
 
   return (
     <>
@@ -45,7 +43,9 @@ const LoginPage = () => {
               Forgot Password
             </Link>
             <button
-              onClick={() => {}}
+              onClick={async () => {
+                await auth?.emailLogin(email, password);
+              }}
               type="button"
               className="border rounded-lg py-2 text-left px-4 w-fit hover:bg-blue-500 hover:border-white hover:text-white transition"
             >
