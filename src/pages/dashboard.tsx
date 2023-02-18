@@ -1,5 +1,5 @@
 import { AppShell, Header, Container, Text, Title, Space, Table } from '@mantine/core';
-import { HeaderResponsive } from './header';
+import { HeaderResponsive } from '../components/header';
 
 export default function Shell() {
 
@@ -22,11 +22,13 @@ export default function Shell() {
   return (
     <AppShell
       padding="md"
-      header={<Header height={60} p="xs">{<HeaderResponsive links={[
-        { "link": "/dashboard/account", "label": "Account"},
-        { "link": "/dashboard/cards", "label": "Cards" },
-        { "link": "/dashboard/learn", "label": "Learn"}
-      ]} />}</Header>}
+      header={<Header height={60} p="xs">{
+        <HeaderResponsive links={[
+          { "link": "/dashboard/account", "label": "Account"},
+          { "link": "/dashboard/payments", "label": "Payments" },
+          { "link": "/dashboard/learn", "label": "Learn"}
+        ]} />
+      }</Header>}
       styles={(theme) => ({
         main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
       })}

@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { createStyles, Header, Container, Group, Burger, Paper, Transition, Title, Text } from '@mantine/core';
+import { createStyles, Header, Container, Group, Burger, Paper, Transition, Title, Text, Avatar, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconChevronRight } from '@tabler/icons';
+import image from 'next/image';
 
 const HEADER_HEIGHT = 60;
 
@@ -65,6 +67,17 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
+  user: {
+    display: 'block',
+    width: '100%',
+    padding: theme.spacing.md,
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+
+    '&:hover': {
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+    },
+  },
+
   linkActive: {
     '&, &:hover': {
       backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
@@ -104,7 +117,27 @@ export function HeaderResponsive({ links }: HeaderResponsiveProps) {
         <Title color={'blue'}>givn</Title>
         <Group spacing={5} className={classes.links}>
           {items}
+          
         </Group>
+
+        <Group className={classes.links}>
+            <UnstyledButton className={classes.user} >
+                <Group>
+                <div style={{ flex: 1 }}>
+                    <Text size="sm" weight={500}>
+                        Profile
+                     </Text>
+
+                     <Text color="dimmed" size="xs">
+                        User Name
+                    </Text>
+                </div>
+                <Avatar src={"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"} radius="xl" />
+                </Group>
+            </UnstyledButton>
+        </Group>
+
+        
 
         <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
 
@@ -112,6 +145,18 @@ export function HeaderResponsive({ links }: HeaderResponsiveProps) {
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>
               {items}
+              <a
+                key={'Profile'}
+                href={'k'}
+                className={cx(classes.link, { [classes.linkActive]: active === '' })}
+                onClick={(event) => {
+                    event.preventDefault();
+                    setActive('');
+                    close();
+                }}
+                >
+                Profile
+              </a>
             </Paper>
           )}
         </Transition>
