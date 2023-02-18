@@ -22,7 +22,7 @@ export default async function handler(
 
   console.log("REQ BODY", req.body);
 
-  const cityDoc = await db.collection("city").doc(req.body.cityId).get();
+  const cityDoc = await db.collection("city").doc("1006131").get();
   const cityData = cityDoc.data();
 
   const userDoc = await db
@@ -36,7 +36,7 @@ export default async function handler(
       lastName: req.body.lastName,
       email: req.body.email || "",
       countryCode: cityData?.countryCode || "",
-      phone: req.body.phoneNumber || "",
+      phone: req.body.phoneNumber || cityData?.phoneNumber || "",
       address: cityData?.address || "",
       shippingAddress: cityData?.address || "",
       dateOfBirth: req.body.dateOfBirth || "",
