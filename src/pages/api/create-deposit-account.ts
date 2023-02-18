@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Unit } from "@unit-finance/unit-node-sdk";
+import { Account, Unit, UnitResponse } from "@unit-finance/unit-node-sdk";
 
 type Data = {
-  name: string;
+  account: UnitResponse<Account>;
 };
 
 export default async function handler(
@@ -16,7 +16,7 @@ export default async function handler(
 
   console.log("UNIT CUSTOMER ID", req.body.customerId);
 
-  await unit.accounts.create({
+  const account = await unit.accounts.create({
     type: "depositAccount",
     attributes: {
       depositProduct: "checking",
@@ -31,5 +31,5 @@ export default async function handler(
     },
   });
 
-  res.status(200).json({ name: "John Doe" });
+  res.status(200).json({ account });
 }
