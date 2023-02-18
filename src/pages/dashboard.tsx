@@ -1,17 +1,22 @@
 import { AppShell, Header, Container, Text, Title, Space, Table } from '@mantine/core';
-import { useState } from 'react';
-import { HeaderResponsive } from '../components/header';
-import AccountPage from '@/components/accountPage';
+import { useEffect, useState } from 'react';
+import { HeaderResponsive } from '../components/dashboard/header';
+import AccountPage from '@/components/dashboard/accountPage';
+import ProfilePage from '@/components/dashboard/profilePage';
+import CardsPage from '@/components/dashboard/cards';
+import { IconBuildingBank, IconCreditCard, IconBooks } from '@tabler/icons-react';
 
 export default function Shell() {
 
   const links = [
-    { "link": "/dashboard/account", "label": "Account"},
-    { "link": "/dashboard/payments", "label": "Payments" },
-    { "link": "/dashboard/learn", "label": "Learn"}
+    { "link": "/dashboard/account", "label": "Accounts", icon: <IconBuildingBank />},
+    { "link": "/dashboard/cards", "label": "Cards", icon: <IconCreditCard /> },
+    { "link": "/dashboard/learn", "label": "Learn", icon: <IconBooks />}
   ]
 
   const [active, setActive] = useState(links[0].link);
+
+  const customerID = "875223"
 
   return (
     <AppShell
@@ -24,7 +29,10 @@ export default function Shell() {
       })}
     >
       {
-        active == "/dashboard/account" ? (<AccountPage />) : (<></>)
+        active == "/dashboard/account" ? (<AccountPage customerID={customerID}/>) : 
+        active == "/dashboard/profile" ? (<ProfilePage />):
+        active == "/dashboard/cards" ? (<CardsPage customerID={customerID}/>): 
+        (<div></div>)
       }
       
     </AppShell>
