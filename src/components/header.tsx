@@ -88,21 +88,22 @@ const useStyles = createStyles((theme) => ({
 
 interface HeaderResponsiveProps {
   links: { link: string; label: string }[];
+  activeLink: string;
+  setActiveLink: (value: string) => void;
 }
 
-export function HeaderResponsive({ links }: HeaderResponsiveProps) {
+export function HeaderResponsive({ links, activeLink, setActiveLink }: HeaderResponsiveProps) {
   const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0].link);
   const { classes, cx } = useStyles();
 
   const items = links.map((link) => (
     <a
       key={link.label}
       href={link.link}
-      className={cx(classes.link, { [classes.linkActive]: active === link.link })}
+      className={cx(classes.link, { [classes.linkActive]: activeLink === link.link })}
       onClick={(event) => {
         event.preventDefault();
-        setActive(link.link);
+        setActiveLink(link.link);
         close();
       }}
     >
@@ -148,10 +149,10 @@ export function HeaderResponsive({ links }: HeaderResponsiveProps) {
               <a
                 key={'Profile'}
                 href={'k'}
-                className={cx(classes.link, { [classes.linkActive]: active === '' })}
+                className={cx(classes.link, { [classes.linkActive]: activeLink === '' })}
                 onClick={(event) => {
                     event.preventDefault();
-                    setActive('');
+                    setActiveLink('');
                     close();
                 }}
                 >
