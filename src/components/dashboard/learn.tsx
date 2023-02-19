@@ -1,4 +1,4 @@
-import { createStyles, Card, Text, SimpleGrid, UnstyledButton, Anchor, Group, Container } from '@mantine/core';
+import { createStyles, Card, Text, SimpleGrid, UnstyledButton, Anchor, Group, Container, Modal, Radio, Title, Divider, Space } from '@mantine/core';
 import {
   IconCreditCard,
   IconBuildingBank,
@@ -9,8 +9,11 @@ import {
   IconReport,
   IconCashBanknote,
   IconCoin,
+  IconCheckbox,
+  IconCircle,
 } from '@tabler/icons-react';
-
+import { useState } from 'react';
+import LessonModal from './lessonModal';
 const mockdata = [
   { title: 'Credit cards', icon: IconCreditCard, color: 'violet' },
   { title: 'Banks nearby', icon: IconBuildingBank, color: 'indigo' },
@@ -45,14 +48,25 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+export interface IClass {
+    title: string;
+    content: string;
+    isComplete: boolean;
+}
+
 export function ActionsGrid() {
-  const { classes, theme } = useStyles();
+  const { classes } = useStyles();
+
+  const [currentClass, setCurrentClass] = useState<IClass | undefined>(undefined);
 
   const items = mockdata.map((item) => (
-    <UnstyledButton key={item.title} className={classes.item}>
+    <UnstyledButton key={item.title} className={classes.item} onClick={async () => {
+        setCurrentClass({title: item.title, content: "", isComplete: false});
+      }}>
       <Card radius="md">
-        <item.icon color={theme.colors[item.color][6]} size={32} />
-        <Text size="xs" mt={7}>
+        {/* <item.icon color={theme.colors[item.color][6]} size={32} /> */}
+        <IconCircle></IconCircle>
+        <Text size="md" mt={7}>
             {item.title}
         </Text>
     </Card>
@@ -60,17 +74,22 @@ export function ActionsGrid() {
     
   ));
 
+  
+
   return (
-    <Container mt="xl">
+    <>
+        <LessonModal currentClass={currentClass} setCurrentClass={setCurrentClass}/>
+        <Container mt="xl">
         <Card withBorder radius="md" className={classes.card}>
-        <Group position="apart">
-            <Text className={classes.title}>Lessons</Text>
-        </Group>
-        <SimpleGrid cols={2} mt="md">
-            {items}
-        </SimpleGrid>
-        </Card>       
-    </Container>
+            <Group position="apart">
+                <Text className={classes.title}>Lessons</Text>
+            </Group>
+            <SimpleGrid cols={2} mt="md">
+                {items}
+            </SimpleGrid>
+        </Card>
+        </Container>
+    </>
 
   );
 }
