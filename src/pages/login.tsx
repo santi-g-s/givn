@@ -5,6 +5,8 @@ import { PasswordInput, TextInput } from "@mantine/core";
 import { Inter } from "@next/font/google";
 import { withAuthUser, AuthAction } from "next-firebase-auth";
 import { useAuth } from "@/contexts/AuthContext";
+import PublicHeader from "@/components/dashboard/PublicHeader";
+import Loader from "@/components/Loader";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +19,7 @@ const LoginPage = () => {
         <title>Givn | Login</title>
         <meta name="description" content="Login" />
       </Head>
+      <PublicHeader />
       <div className="flex flex-col h-screen justify-center items-center">
         <div className="bg-white min-w-[400px] border rounded-lg flex flex-col p-4 md:p-8 lg:p-12">
           <h1 className="text-2xl md:text-3xl lg:text-4xl text-center font-light pb-4 md:pb-8">
@@ -72,5 +75,5 @@ export default withAuthUser({
   whenAuthedBeforeRedirect: AuthAction.SHOW_LOADER,
   whenUnauthedBeforeInit: AuthAction.RENDER,
   whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: null,
+  LoaderComponent: Loader,
 })(LoginPage);
