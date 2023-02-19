@@ -1,135 +1,138 @@
-import { Divider, Modal, Radio, Space, Title, Text, Container } from "@mantine/core"
+import {
+  Divider,
+  Modal,
+  Radio,
+  Space,
+  Title,
+  Text,
+  Container,
+} from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import GenerateQuizButton from "./generateQuizButton"
+import GenerateQuizButton from "./generateQuizButton";
 import { IClass, ITask } from "./learn";
 
 interface LessonModalProps {
-    currentTask: ITask | undefined
-    setCurrentTask: (value: ITask | undefined) => void;
-    onSuccess: (value: any) => any;
+  currentTask: ITask | undefined;
+  setCurrentTask: (value: ITask | undefined) => void;
+  onSuccess: (value: any) => any;
 }
 
 interface IQuestion {
-    question: string;
-    choices: string[];
-    answer: string;
+  question: string;
+  choices: string[];
+  answer: string;
 }
 
-export default function LessonModal({currentTask, setCurrentTask, onSuccess}: LessonModalProps) {
+export default function LessonModal({
+  currentTask,
+  setCurrentTask,
+  onSuccess,
+}: LessonModalProps) {
+  const [loaded, setLoaded] = useState(false);
+  const [questions, setQuestions] = useState<IQuestion[] | []>([]);
 
-    const [loaded, setLoaded] = useState(false);
-    const [questions, setQuestions] = useState<IQuestion[] | []>([]);
+  const [answers, setAnswers] = useState<string[] | []>([]);
 
-    const [answers, setAnswers] = useState<string[] | []>([]);
+  useEffect(() => {
+    setLoaded(false);
+  }, []);
 
-    useEffect(() => {
-        setLoaded(false)
-        }, []
-    );
+  const generateQuiz = async () => {
+    const res = await axios.post("/api/fetch-gpt-questions", {
+      text: currentTask?.articleText,
+    });
+    console.log(res.data);
+    setLoaded(true);
+    const tempQuestions = [] as any[];
+    for (let i = 0; i < res.data.output.length; i++) {
+      const obj: IQuestion = {
+        question: res.data.output[i].question,
+        choices: res.data.output[i].choices,
+        answer: res.data.output[i].answer,
+      };
+      tempQuestions.push(obj);
+    }
+    setAnswers(tempQuestions);
+  };
 
-    const generateQuiz = async () => {
-        axios.post("/api/fetch-gpt-questions", {
-            text: currentTask?.articleText,
-        }).then(res => {
-            // res.data.args; // { hello: 'world' }
-            console.log(res.data)
-            setLoaded(true)
-            setQuestions([]);
-            for (let i = 0; i < res.data.output.length; i++) {
-                const obj: IQuestion = {
-                    question: res.data.output[i].question,
-                    choices: res.data.output[i].choices,
-                    answer: res.data.output[i].answer
-                }
-                setQuestions(oldArray => [...oldArray, obj])
-            }
-        });
-    };
+  const items = questions.map((question, index) => (
+    <Radio.Group
+      value={question.choices[0]}
+      onChange={(value) => {
+        const tempAnswers = [...answers];
+        tempAnswers[index] = value;
+        setAnswers(tempAnswers);
+      }}
+      mx="xl"
+      name={`question_group_${index}`}
+      orientation="vertical"
+      label={question.question}
+      mt="xl"
+    >
+      {question.choices.map((choice) => (
+        <Radio value={choice} label={choice} />
+      ))}
+    </Radio.Group>
+  ));
 
-    const items = questions.map((question, index) => (
-        <Radio.Group
-            value={answers[index]}
-            mx="xl"
-            name={`question_group_${index}`}
-            orientation="vertical"
-            label={question.question}
-            mt="xl"
-        >
-            {
-                question.choices.map((choice) => (
-                    <Radio value={choice} label={choice} />
-                ))
-            }
-        </Radio.Group>
-    ));
-    
-    return (
-        <Modal
-          centered
-          size="100%"
-          opened={currentTask != null}
-          onClose={() => {
-            setLoaded(false)
-            setCurrentTask(undefined)}
-        }
-        >
-            <Container>
-                <Title my="xl">
-                    {currentTask?.title}
-                </Title>
-                <Text> 
-                    {currentTask?.articleText}
-                </Text>
+  return (
+    <Modal
+      centered
+      size="100%"
+      opened={currentTask != null}
+      onClose={() => {
+        setLoaded(false);
+        setCurrentTask(undefined);
+      }}
+    >
+      <Container>
+        <Title my="xl">{currentTask?.title}</Title>
+        <Text>{currentTask?.articleText}</Text>
 
-                <Space h="xl"></Space>
+        <Space h="xl"></Space>
 
+        {!loaded ? (
+          <GenerateQuizButton
+            loaded={loaded}
+            setLoaded={setLoaded}
+            onClick={generateQuiz}
+          ></GenerateQuizButton>
+        ) : (
+          <>
+            <Divider></Divider>
+            <Title my="xl">Quiz</Title>
 
-                {
-                    !loaded ?  
-                    (
-                        <GenerateQuizButton loaded={loaded} setLoaded={setLoaded} onClick={generateQuiz}></GenerateQuizButton>
-                    ) : 
-                    (
-                       <>
-                        <Divider></Divider>
-                        <Title my="xl">
-                            Quiz
-                        </Title>
+            {items}
 
-                        {items}
+            <div className="flex justify-items-end">
+              <div className="grow"></div>
+              <button
+                onClick={async () => {
+                  var isCorrect = true;
+                  for (let i = 0; i < answers.length; i++) {
+                    if (answers[i] != questions[i].answer) {
+                      isCorrect = false;
+                    }
+                  }
+                  console.log(answers);
+                  if (isCorrect) {
+                    onSuccess(currentTask);
+                  }
+                }}
+                type="button"
+                className="text-black border rounded-lg py-2 text-left px-4 w-fit hover:bg-blue-500 hover:border-white hover:text-white transition"
+              >
+                Submit Answers
+              </button>
+            </div>
+          </>
+        )}
 
-                        <div className="flex justify-items-end">
-                            <div className="grow"></div>  
-                            <button
-                                onClick={async () => {
-                                    var isCorrect = true
-                                    for (let i = 0; i < answers.length; i++) {
-                                        if (answers[i] != questions[i].answer) {
-                                            isCorrect = false
-                                        }
-                                    }
-                                    console.log(answers);
-                                    if (isCorrect) {
-                                        onSuccess(currentTask)
-                                    }
-                                }}
-                                type="button"
-                                className="text-black border rounded-lg py-2 text-left px-4 w-fit hover:bg-blue-500 hover:border-white hover:text-white transition"
-                            >
-                                Submit Answers
-                            </button>
-                        </div>                     
-                       </>
-                    )
-                }
-
-                <Space h="xl"></Space>
-                <Space h="xl"></Space>
-                <Space h="xl"></Space>  
-            </Container>
-        
-
-        </Modal>
-    )
+        <Space h="xl"></Space>
+        <Space h="xl"></Space>
+        <Space h="xl"></Space>
+      </Container>
+    </Modal>
+  );
 }
