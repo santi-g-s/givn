@@ -5,11 +5,11 @@ import argparse
 # Function to generate multiple choice questions with one correct answer
 def generate_mcq(article_text):
     # Set up OpenAI API parameters
-    prompt = f"Generate 5 multiple choice questions with one correct answer based on the following article:\n{article_text}\n\nQuestion 1:"
+    prompt = f"Generate 3 multiple choice questions (A,B,C,D) with one correct answer based on the following article:\n{article_text}\n\nQuestion 1:"
     model = "text-davinci-003"
     temperature = 0.5
     max_tokens = 1500
-    n = 5
+    n = 3
     stop = "\n\n"
 
     # Use OpenAI API to generate questions
@@ -43,7 +43,7 @@ def main():
     args = parser.parse_args()
 
     # Set up OpenAI API key
-    openai.api_key = "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"
+    openai.api_key = "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"
 
     # Get article link from user
     article_link = args.text
@@ -64,7 +64,7 @@ def main():
         output.append(QCA)
         QCA = {}
     
-    #print(output)
+    print(output)
     
     return output
 
