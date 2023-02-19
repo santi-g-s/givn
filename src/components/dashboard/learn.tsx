@@ -11,11 +11,14 @@ import {
   IconCoin,
   IconCheckbox,
   IconCircle,
+  IconCircleCheck,
+  IconCircleCheckFilled,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import LessonModal from './lessonModal';
 import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
+import { showNotification } from '@mantine/notifications';
 
 const mockdata = [
   { title: "Credit cards", icon: IconCreditCard, color: "violet" },
@@ -96,13 +99,21 @@ export function ActionsGrid() {
   }
 
   const items = tasks.map((task) => (
-    <UnstyledButton key={task.title} className={classes.item} onClick={async () => {
+    <UnstyledButton disabled={task.isComplete} key={task.title} className={classes.item} onClick={async () => {
         setCurrentTask(task);
       }}>
-      <Card radius="md">
+      <Card radius="md" className={(task.isComplete ? "bg-blue-400" : "")}>
         {/* <item.icon color={theme.colors[item.color][6]} size={32} /> */}
-        <IconCircle color={theme.colors['blue'][6]}></IconCircle>
-        <Text size="md" mt={7}>
+        {
+          (task.isComplete ? (
+            <IconCircleCheck color="white"></IconCircleCheck>
+          ):
+          (
+            <IconCircle color={theme.colors['blue'][6]}></IconCircle>
+          )
+          )
+        }
+        <Text size="md" mt={7} className={(task.isComplete ? "text-white" : "text-black")}>
             {task.title}
         </Text>
       </Card>
@@ -116,12 +127,19 @@ export function ActionsGrid() {
         cityId: "875491",
         taskId: value.id
       })
+      setCurrentTask(undefined)
       console.log(resAPI)
+      showNotification({
+        autoClose: 3000,
+        color: "green",
+        title: "Well done!",
+        message: `You succesfully completed ${value.title}`,
+    });
   }
 
   useEffect(() => {
     fetchData();
-    }, [auth?.currentUser]
+    }, [auth?.currentUser, currentTask]
   );
 
   return (

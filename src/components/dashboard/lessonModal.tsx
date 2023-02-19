@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { showNotification, updateNotification } from "@mantine/notifications";
 import GenerateQuizButton from "./generateQuizButton";
 import { IClass, ITask } from "./learn";
 
@@ -77,11 +78,20 @@ export default function LessonModal({
     </Radio.Group>
   ));
 
+  const onFailure = () => {
+    showNotification({
+        autoClose: 3000,
+        color: "red",
+        title: "Almost there!",
+        message: "At least one of your answers is wrong. Give it another go!",
+    });
+  }
+
   return (
     <Modal
       centered
       size="100%"
-      opened={currentTask != null}
+      opened={currentTask != undefined}
       onClose={() => {
         setLoaded(false);
         setCurrentTask(undefined);
@@ -106,6 +116,9 @@ export default function LessonModal({
 
             {items}
 
+            <Space h="xl"></Space>
+            <Space h="xl"></Space>
+
             <div className="flex justify-items-end">
               <div className="grow"></div>
               <button
@@ -119,7 +132,10 @@ export default function LessonModal({
                   console.log(answers);
                   if (isCorrect) {
                     onSuccess(currentTask!);
+                  } else {
+                    onFailure();
                   }
+                  
                 }}
                 type="button"
                 className="text-black border rounded-lg py-2 text-left px-4 w-fit hover:bg-blue-500 hover:border-white hover:text-white transition"
