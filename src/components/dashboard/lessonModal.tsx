@@ -32,7 +32,7 @@ export default function LessonModal({
   const [loaded, setLoaded] = useState(false);
   const [questions, setQuestions] = useState<IQuestion[] | []>([]);
 
-  const [answers, setAnswers] = useState<string[] | []>([]);
+  const [answers, setAnswers] = useState<string[]>([]);
 
   useEffect(() => {
     setLoaded(false);
@@ -53,24 +53,25 @@ export default function LessonModal({
       };
       tempQuestions.push(obj);
     }
-    setAnswers(tempQuestions);
+    setQuestions(tempQuestions);
   };
 
-  const items = questions.map((question, index) => (
+  const items = questions.map((data, index) => (
     <Radio.Group
-      value={question.choices[0]}
+      value={answers[index]}
       onChange={(value) => {
-        const tempAnswers = [...answers];
+        let tempAnswers = [] as string[]
+        tempAnswers = tempAnswers.concat(answers);
         tempAnswers[index] = value;
         setAnswers(tempAnswers);
       }}
       mx="xl"
       name={`question_group_${index}`}
       orientation="vertical"
-      label={question.question}
+      label={data.question}
       mt="xl"
     >
-      {question.choices.map((choice) => (
+      {data.choices.map((choice) => (
         <Radio value={choice} label={choice} />
       ))}
     </Radio.Group>
