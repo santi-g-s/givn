@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getUserFromCookies } from "next-firebase-auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { getApp } from "firebase-admin/app";
 import { FieldValue } from "firebase-admin/firestore";
 
 type Data = {

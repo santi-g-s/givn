@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Drawer, Button, Group } from "@mantine/core";
 import CollectForm from "./InputCredit";
 
-export default function InputCreditDrawer() {
+export default function InputCreditDrawer(props: any) {
   const [opened, setOpened] = useState(false);
 
   return (
@@ -10,7 +10,7 @@ export default function InputCreditDrawer() {
       <Drawer
         opened={opened}
         onClose={() => setOpened(false)}
-        title="Donate"
+        title=""
         padding="xl"
         size="xl"
         position="bottom"
@@ -18,7 +18,7 @@ export default function InputCreditDrawer() {
           drawer: "h-[75vh]",
         }}
       >
-        {<CollectForm />}
+        <CollectForm user={props.user} loading={props.loading} />
       </Drawer>
 
       <Group position="center">

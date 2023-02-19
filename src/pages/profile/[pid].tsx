@@ -14,15 +14,18 @@ export default function Profile() {
     if (!pid) return;
     const getUser = async () => {
       const res = await axios.get(`/api/fetch-user/${pid}`);
+      console.log("RES", res);
       setData(res.data);
       setLoading(false);
     };
     getUser();
   }, [pid]);
 
+  console.log("DATA", data, loading);
+
   return (
     <div className="flex flex-col gap-y-2 items-center justify-center">
-      <InputCreditDrawer />
+      <InputCreditDrawer user={data} loading={loading} />
     </div>
   );
 }
