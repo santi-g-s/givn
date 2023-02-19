@@ -64,6 +64,7 @@ export interface ITask {
   title: string;
   articleText: string;
   isComplete: boolean;
+  id: string;
 }
 
 export function ActionsGrid() {
@@ -87,7 +88,8 @@ export function ActionsGrid() {
       const obj: ITask = {
         title: resAPI.data.result[i].title,
         articleText: resAPI.data.result[i].articleText,
-        isComplete: resAPI.data.result[i].isComplete
+        isComplete: resAPI.data.result[i].isComplete,
+        id: resAPI.data.result[i].id
       }
       setTasks(oldArray => [...oldArray, obj])
     }
@@ -107,8 +109,14 @@ export function ActionsGrid() {
     </UnstyledButton>
   ));
 
-  const onSuccess = (value: any) => {
+  const onSuccess = async (value: ITask) => {
       console.log("success", value);
+      const resAPI = await axios.post(`/api/complete-task/`, {
+        uid: auth?.currentUser?.uid,
+        cityId: "875491",
+        taskId: value.id
+      })
+      console.log(resAPI)
   }
 
   useEffect(() => {

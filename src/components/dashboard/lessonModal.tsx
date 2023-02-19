@@ -15,7 +15,7 @@ import { IClass, ITask } from "./learn";
 interface LessonModalProps {
   currentTask: ITask | undefined;
   setCurrentTask: (value: ITask | undefined) => void;
-  onSuccess: (value: any) => any;
+  onSuccess: (value: ITask) => any;
 }
 
 interface IQuestion {
@@ -118,7 +118,7 @@ export default function LessonModal({
                   }
                   console.log(answers);
                   if (isCorrect) {
-                    onSuccess(currentTask);
+                    onSuccess(currentTask!);
                   }
                 }}
                 type="button"
