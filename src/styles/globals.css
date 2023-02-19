@@ -100,6 +100,12 @@ a {
   text-decoration: none;
 }
 
+iframe {
+  height: 100%;
+  width: 100%;
+  min-width: 320px;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
