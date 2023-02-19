@@ -24,7 +24,7 @@ export default function InputCreditDrawer(props: any) {
 
       <div className="flex flex-col items-center">
         {props.user?.user ? (
-          <p className="text-4xl md:text-6xl font-extralight mb-12">
+          <p className="text-4xl md:text-6xl text-center font-extralight mb-12">
             Donate to {props.user?.user.firstName} {props.user?.user.lastName}
           </p>
         ) : (
