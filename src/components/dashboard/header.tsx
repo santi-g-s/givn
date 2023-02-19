@@ -12,6 +12,8 @@ import {
   Avatar,
   UnstyledButton,
 } from "@mantine/core";
+import Link from "next/link";
+import Image from "next/image";
 import { useDisclosure } from "@mantine/hooks";
 import { IconUserCircle } from "@tabler/icons-react";
 import { User } from "firebase/auth";
@@ -57,11 +59,21 @@ export function HeaderResponsive({
   return (
     // <Header height={HEADER_HEIGHT} mb={120} className={classes.root}>
     <Container className={classes.header}>
-      <Title color={"blue"}>givn</Title>
+      <Link href="/">
+        <span className="flex gap-x-4">
+          <Image
+            src="/logo_no_text.svg"
+            alt="Givn Logo"
+            width={60}
+            height={20}
+            priority
+          />
+          <p className="text-2xl font-light">Givn</p>
+        </span>
+      </Link>
       <Group position="apart" spacing={5} className={classes.links}>
         {items}
       </Group>
-
       <Group className={classes.links}>
         <a
           key={"profile"}
@@ -86,14 +98,12 @@ export function HeaderResponsive({
           </Group>
         </a>
       </Group>
-
       <Burger
         opened={opened}
         onClick={toggle}
         className={classes.burger}
         size="sm"
       />
-
       <Transition transition="pop-top-right" duration={200} mounted={opened}>
         {(styles) => (
           <Paper className={classes.dropdown} withBorder style={styles}>
