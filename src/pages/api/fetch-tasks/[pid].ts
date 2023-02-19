@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getFirestore } from "firebase-admin/firestore";
 
 type Data = {
-  result: any
+  result: any;
 };
 
 export default async function handler(
@@ -13,22 +13,17 @@ export default async function handler(
 
   const db = getFirestore();
 
-  const collectionRef = db
-    .collection("city")
-    .doc("875491")
-    .collection("users")
-    .doc((pid as string) || "")
-    .collection("tasks");
+  const collectionRef = db.collection("city").doc("875491").collection("tasks");
 
-  const output = (await collectionRef.orderBy('title').limit(10).get()).docs
+  const output = (await collectionRef.orderBy("title").limit(10).get()).docs;
 
   const result = <any>[];
 
-  for (let i=0; i<output.length; i++) {
-    result.push({...output[i].data(), id: output[i].id})
+  for (let i = 0; i < output.length; i++) {
+    result.push({ ...output[i].data(), id: output[i].id });
   }
 
   res.status(200).json({
-    result
+    result,
   });
 }

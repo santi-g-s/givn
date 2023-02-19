@@ -19,8 +19,6 @@ export default async function handler(
   const taskRef = db
     .collection("city")
     .doc(req.body.cityId)
-    .collection("users")
-    .doc(req.body.uid || "")
     .collection("tasks")
     .doc(req.body.taskId);
   const taskDoc = await taskRef.get();
@@ -34,7 +32,7 @@ export default async function handler(
   batch.set(
     taskRef,
     {
-      isComplete: true,
+      [req.body.uid]: true,
       completedAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     },
