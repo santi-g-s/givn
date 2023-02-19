@@ -12,8 +12,11 @@ import {
   IconCheckbox,
   IconCircle,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LessonModal from './lessonModal';
+import { useAuth } from '@/contexts/AuthContext';
+import axios from 'axios';
+
 const mockdata = [
   { title: "Credit cards", icon: IconCreditCard, color: "violet" },
   { title: "Banks nearby", icon: IconBuildingBank, color: "indigo" },
@@ -57,30 +60,65 @@ export interface IClass {
     isComplete: boolean;
 }
 
+export interface ITask {
+  title: string;
+  articleText: string;
+  isComplete: boolean;
+}
+
 export function ActionsGrid() {
-  const { classes } = useStyles();
 
-  const [currentClass, setCurrentClass] = useState<IClass | undefined>(undefined);
+  const auth = useAuth();
 
-  const items = mockdata.map((item) => (
-    <UnstyledButton key={item.title} className={classes.item} onClick={async () => {
-        setCurrentClass({title: item.title, content: "", isComplete: false});
+  const { classes, theme } = useStyles();
+
+  const [currentTask, setCurrentTask] = useState<ITask | undefined>(undefined);
+
+  const [tasks, setTasks] = useState<ITask[] | []>([]);
+
+  const fetchData = async () => {
+    if (!auth?.currentUser?.uid) {
+      return
+    }
+    const resAPI = await axios.get(`/api/fetch-tasks/${auth?.currentUser?.uid}`)
+    console.log(resAPI)
+    setTasks([]);
+    for (let i = 0; i < resAPI.data.result.length; i++) {
+      const obj: ITask = {
+        title: resAPI.data.result[i].title,
+        articleText: resAPI.data.result[i].articleText,
+        isComplete: resAPI.data.result[i].isComplete
+      }
+      setTasks(oldArray => [...oldArray, obj])
+    }
+  }
+
+  const items = tasks.map((task) => (
+    <UnstyledButton key={task.title} className={classes.item} onClick={async () => {
+        setCurrentTask(task);
       }}>
       <Card radius="md">
         {/* <item.icon color={theme.colors[item.color][6]} size={32} /> */}
-        <IconCircle></IconCircle>
+        <IconCircle color={theme.colors['blue'][6]}></IconCircle>
         <Text size="md" mt={7}>
-            {item.title}
+            {task.title}
         </Text>
       </Card>
     </UnstyledButton>
   ));
 
-  
+  const onSuccess = (value: any) => {
+      console.log("success", value);
+  }
+
+  useEffect(() => {
+    fetchData();
+    }, [auth?.currentUser]
+  );
 
   return (
     <>
-        <LessonModal currentClass={currentClass} setCurrentClass={setCurrentClass}/>
+        <LessonModal currentTask={currentTask} setCurrentTask={setCurrentTask} onSuccess={onSuccess}/>
         <Container mt="xl">
         <Card withBorder radius="md" className={classes.card}>
             <Group position="apart">

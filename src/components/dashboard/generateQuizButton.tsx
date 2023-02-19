@@ -5,29 +5,47 @@ import { Button, Progress } from '@mantine/core';
 interface GenerateQuizButtonProps {
   loaded: boolean;
   setLoaded: (value: boolean) => void;
+  onClick: () => any;
 }
 
-export default function GenerateQuizButton({loaded, setLoaded}: GenerateQuizButtonProps) {
+export default function GenerateQuizButton({loaded, setLoaded, onClick}: GenerateQuizButtonProps) {
   const [progress, setProgress] = useState(0);
+
+  const [direction, setDirection] = useState(0);
 
   const interval = useInterval(
     () =>
       setProgress((current) => {
-        if (current < 100) {
-          return current + 1;
+
+        if (loaded == true) {
+          interval.stop();
+          return 0;
         }
 
-        interval.stop();
-        setLoaded(true);
-        return 0;
+        if (direction == 0) {
+            if (current + 1 > 100) {
+              setDirection(1);
+            }
+            return current + 1;
+        } else {
+          if (current - 1 < 0) {
+            setDirection(0);
+          }
+          return current - 1;
+        }
+
       }),
-    20
+    50
   );
   return (
     <Button
       fullWidth
       className="bg-blue-600 hover:bg-blue-600"
-      onClick={() => (loaded ? setLoaded(false) : !interval.active && interval.start())}
+      onClick={() => {
+        (loaded ? setLoaded(false) : !interval.active && interval.start());
+        onClick();
+      }
+      }
     >
       <div className="relative z-10">
         {progress !== 0 ? 'Generating Quiz' : loaded ? 'Quiz Generated!' : 'Generate Quiz'}
