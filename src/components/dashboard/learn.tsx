@@ -15,21 +15,24 @@ import {
 import { useState } from 'react';
 import LessonModal from './lessonModal';
 const mockdata = [
-  { title: 'Credit cards', icon: IconCreditCard, color: 'violet' },
-  { title: 'Banks nearby', icon: IconBuildingBank, color: 'indigo' },
-  { title: 'Transfers', icon: IconRepeat, color: 'blue' },
-  { title: 'Refunds', icon: IconReceiptRefund, color: 'green' },
-  { title: 'Receipts', icon: IconReceipt, color: 'teal' },
-  { title: 'Taxes', icon: IconReceiptTax, color: 'cyan' },
-  { title: 'Reports', icon: IconReport, color: 'pink' },
-  { title: 'Payments', icon: IconCoin, color: 'red' },
-  { title: 'Cashback', icon: IconCashBanknote, color: 'orange' },
-  { title: 'Spending', icon: IconReceipt, color: 'blue' },
+  { title: "Credit cards", icon: IconCreditCard, color: "violet" },
+  { title: "Banks nearby", icon: IconBuildingBank, color: "indigo" },
+  { title: "Transfers", icon: IconRepeat, color: "blue" },
+  { title: "Refunds", icon: IconReceiptRefund, color: "green" },
+  { title: "Receipts", icon: IconReceipt, color: "teal" },
+  { title: "Taxes", icon: IconReceiptTax, color: "cyan" },
+  { title: "Reports", icon: IconReport, color: "pink" },
+  { title: "Payments", icon: IconCoin, color: "red" },
+  { title: "Cashback", icon: IconCashBanknote, color: "orange" },
+  { title: "Spending", icon: IconReceipt, color: "blue" },
 ];
 
 const useStyles = createStyles((theme) => ({
   card: {
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1],
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[6]
+        : theme.colors.gray[1],
   },
 
   title: {
@@ -39,11 +42,11 @@ const useStyles = createStyles((theme) => ({
 
   item: {
     borderRadius: theme.radius.md,
-    transition: 'box-shadow 150ms ease, transform 100ms ease',
+    transition: "box-shadow 150ms ease, transform 100ms ease",
 
-    '&:hover': {
+    "&:hover": {
       boxShadow: `${theme.shadows.md} !important`,
-      transform: 'scale(1.05)',
+      transform: "scale(1.05)",
     },
   },
 }));
@@ -69,9 +72,8 @@ export function ActionsGrid() {
         <Text size="md" mt={7}>
             {item.title}
         </Text>
-    </Card>
+      </Card>
     </UnstyledButton>
-    
   ));
 
   

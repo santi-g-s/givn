@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@mantine/core";
 import styles from "../styles/InputCreditStyle.module.css";
+import axios from "axios";
+import { showNotification, updateNotification } from "@mantine/notifications";
 
-const CollectForm = () => {
+const CollectForm = (props) => {
   const [form, setForm] = useState({});
   const [isLoaded, scriptLoaded] = useState(false);
+  const [donationLoading, setDonationLoading] = useState(false);
   const [amount, setAmount] = useState("0.00");
 
   // script loading
@@ -21,7 +24,7 @@ const CollectForm = () => {
   useEffect(() => {
     if (isLoaded) {
       const vgsForm = window.VGSCollect.create(
-        "tntsfeqzp4a",
+        "tntwth6irix",
         "sandbox",
         (state) => {}
       );
@@ -75,16 +78,53 @@ const CollectForm = () => {
     e.preventDefault();
     console.log("submit");
     form.submit(
-      "/post",
-      {},
-      (status, response) => {
-        console.log(status, response);
+      "/api/simulate-ach-donation",
+      { method: "POST", body: { amount, accountId: props.user } },
+      async (status, response) => {
+        setDonationLoading(true);
+        showNotification({
+          title: "Donating...",
+          message: "Please wait while we process your donation",
+          loading: true,
+          disallowClose: true,
+          autoClose: false,
+          id: "donate",
+        });
+        try {
+          await axios.post(`/api/simulate-ach-donation`, {
+            amount,
+            accountId: props.user.user.accountId,
+          });
+          updateNotification({
+            title: "Success",
+            message: "Your donation was processed successfully! Thank you :)",
+            loading: false,
+            disallowClose: false,
+            autoClose: true,
+            id: "donate",
+            color: "green",
+          });
+        } catch (e) {
+          updateNotification({
+            title: "Error",
+            message: e.message || "There was an error processing your donation",
+            loading: false,
+            disallowClose: false,
+            autoClose: true,
+            id: "donate",
+            color: "red",
+          });
+        } finally {
+          setDonationLoading(false);
+        }
       },
       (error) => {
         console.log(error);
       }
     );
   };
+
+  console.log("TEST", props.user);
 
   return (
     <>
@@ -100,7 +140,7 @@ const CollectForm = () => {
           <p className="text-3xl md:text-5xl mb-2">$</p>
           <input
             placeholder="0.00"
-            className="ml-2 text-5xl md:text-7xl outline-none text-center w-full h-fit"
+            className="bg-white ml-2 text-5xl md:text-7xl outline-none text-center w-full h-fit"
             style={{ width: Math.min(Math.max(amount.length, 4), 50) + "ch" }}
             value={amount}
             maxLength={7}
@@ -134,8 +174,9 @@ const CollectForm = () => {
           />
         </Input.Wrapper>
         <button
+          disabled={props.loading || !isLoaded || donationLoading}
           type="submit"
-          className="form-buttom bg-blue-500 mt-4 border rounded-lg px-4 py-2 text-white hover:bg-blue-700 transition hover:border-white"
+          className="text-2xl md:text-3xl font-light form-buttom bg-blue-500 mt-4 border rounded-lg px-6 py-3 text-white hover:bg-blue-700 transition hover:border-white"
         >
           Donate
         </button>
