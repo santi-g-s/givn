@@ -1,13 +1,4 @@
-import {
-  createStyles,
-  Card,
-  Text,
-  SimpleGrid,
-  UnstyledButton,
-  Anchor,
-  Group,
-  Container,
-} from "@mantine/core";
+import { createStyles, Card, Text, SimpleGrid, UnstyledButton, Anchor, Group, Container, Modal, Radio, Title, Divider, Space } from '@mantine/core';
 import {
   IconCreditCard,
   IconBuildingBank,
@@ -18,8 +9,13 @@ import {
   IconReport,
   IconCashBanknote,
   IconCoin,
-} from "@tabler/icons-react";
-import axios from "axios";
+  IconCheckbox,
+  IconCircle,
+} from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import LessonModal from './lessonModal';
+import { useAuth } from '@/contexts/AuthContext';
+import axios from 'axios';
 
 const mockdata = [
   { title: "Credit cards", icon: IconCreditCard, color: "violet" },
@@ -58,38 +54,90 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+export interface IClass {
+    title: string;
+    content: string;
+    isComplete: boolean;
+}
+
+export interface ITask {
+  title: string;
+  articleText: string;
+  isComplete: boolean;
+  id: string;
+}
+
 export function ActionsGrid() {
+
+  const auth = useAuth();
+
   const { classes, theme } = useStyles();
 
-  const items = mockdata.map((item) => (
-    <UnstyledButton
-      key={item.title}
-      className={classes.item}
-      onClick={async () => {
-        await axios.post("/api/fetch-gpt-questions", {
-          question: "What is the capital of India?",
-        });
-      }}
-    >
+  const [currentTask, setCurrentTask] = useState<ITask | undefined>(undefined);
+
+  const [tasks, setTasks] = useState<ITask[] | []>([]);
+
+  const fetchData = async () => {
+    if (!auth?.currentUser?.uid) {
+      return
+    }
+    const resAPI = await axios.get(`/api/fetch-tasks/${auth?.currentUser?.uid}`)
+    console.log(resAPI)
+    setTasks([]);
+    for (let i = 0; i < resAPI.data.result.length; i++) {
+      const obj: ITask = {
+        title: resAPI.data.result[i].title,
+        articleText: resAPI.data.result[i].articleText,
+        isComplete: resAPI.data.result[i].isComplete,
+        id: resAPI.data.result[i].id
+      }
+      setTasks(oldArray => [...oldArray, obj])
+    }
+  }
+
+  const items = tasks.map((task) => (
+    <UnstyledButton key={task.title} className={classes.item} onClick={async () => {
+        setCurrentTask(task);
+      }}>
       <Card radius="md">
-        <item.icon color={theme.colors[item.color][6]} size={32} />
-        <Text size="xs" mt={7}>
-          {item.title}
+        {/* <item.icon color={theme.colors[item.color][6]} size={32} /> */}
+        <IconCircle color={theme.colors['blue'][6]}></IconCircle>
+        <Text size="md" mt={7}>
+            {task.title}
         </Text>
       </Card>
     </UnstyledButton>
   ));
 
+  const onSuccess = async (value: ITask) => {
+      console.log("success", value);
+      const resAPI = await axios.post(`/api/complete-task/`, {
+        uid: auth?.currentUser?.uid,
+        cityId: "875491",
+        taskId: value.id
+      })
+      console.log(resAPI)
+  }
+
+  useEffect(() => {
+    fetchData();
+    }, [auth?.currentUser]
+  );
+
   return (
-    <Container mt="xl">
-      <Card withBorder radius="md" className={classes.card}>
-        <Group position="apart">
-          <Text className={classes.title}>Lessons</Text>
-        </Group>
-        <SimpleGrid cols={2} mt="md">
-          {items}
-        </SimpleGrid>
-      </Card>
-    </Container>
+    <>
+        <LessonModal currentTask={currentTask} setCurrentTask={setCurrentTask} onSuccess={onSuccess}/>
+        <Container mt="xl">
+        <Card withBorder radius="md" className={classes.card}>
+            <Group position="apart">
+                <Text className={classes.title}>Lessons</Text>
+            </Group>
+            <SimpleGrid cols={2} mt="md">
+                {items}
+            </SimpleGrid>
+        </Card>
+        </Container>
+    </>
+
   );
 }
