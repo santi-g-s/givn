@@ -108,17 +108,6 @@ const CollectForm = () => {
               setAmount(event.target.value);
             }}
           />
-          {/* <Input
-            classNames={{
-              input:
-                "text-5xl md:text-7xl outline-none text-center w-full h-fit",
-            }}
-            value={amount}
-            variant="unstyled"
-            onChange={(e) => {
-              setAmount(e.target.value);
-            }}
-          /> */}
         </div>
         <Input.Wrapper id="cardHolder" label={"Card Holder"} required>
           <div
