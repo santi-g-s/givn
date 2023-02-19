@@ -21,8 +21,6 @@ const Dashboard = () => {
 
   const [active, setActive] = useState(links[0].link);
 
-  const customerID = "860309"
-
   return (
     <AppShell
       padding="md"
@@ -34,9 +32,9 @@ const Dashboard = () => {
       })}
     >
       {
-        active == "/dashboard/account" ? (<AccountPage customerID={customerID}/>) : 
-        active == "/dashboard/profile" ? (<ProfilePage />):
-        active == "/dashboard/cards" ? (<CardsPage customerID={customerID}/>): 
+        active == "/dashboard/account" ? (<AccountPage/>) : 
+        active == "/dashboard/profile" ? (<ProfilePage/>):
+        active == "/dashboard/cards" ? (<CardsPage/>): 
         (<ActionsGrid />)
       }
       

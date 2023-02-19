@@ -38,9 +38,8 @@ export function HeaderResponsive({ links, activeLink, setActiveLink, currentUser
   return (
     // <Header height={HEADER_HEIGHT} mb={120} className={classes.root}>
       <Container className={classes.header}>
-        {/* <MantineLogo size={28} /> */}
         <Title color={'blue'}>givn</Title>
-        <Group spacing={5} className={classes.links}>
+        <Group position="apart" spacing={5} className={classes.links}>
           {items}
         </Group>
 
@@ -60,7 +59,8 @@ export function HeaderResponsive({ links, activeLink, setActiveLink, currentUser
                   <Text className="text-xs text-gray-400">{currentUser?.email}</Text>
               </div> */}
                 <Group noWrap position="center" spacing='xs'>
-                  <Text className="text-xs">{currentUser?.email}</Text>
+                  {/* <Text className="text-xs">{currentUser?.email}</Text> */}
+                  <Text>Profile</Text>
                   <IconUserCircle />
                 </Group>
               

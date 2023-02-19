@@ -5,14 +5,12 @@ import axios from "axios"
 
 
 
-export default function CardsPage(props) {
-
-  const customerID = props.customerID;
+export default function CardsPage() {
 
   const [cardIDs, setCardIDs] = useState([]);
 
   const fetchData = async () => {
-    const res =  await axios.get(`${process.env.NEXT_PUBLIC_UNIT_API_URL}/cards/?filter[customerId]=${customerID}`, {
+    const res =  await axios.get(`${process.env.NEXT_PUBLIC_UNIT_API_URL}/cards/?filter[customerId]=875223`, {
       headers: {
         'Authorization': 'Bearer '+ process.env.NEXT_PUBLIC_UNIT_TOKEN
       }
@@ -32,7 +30,7 @@ export default function CardsPage(props) {
           {
             cardIDs.map(function(card){
               
-                return <Grid.Col span={6}>
+                return <Grid.Col span={12}>
                         <unit-elements-card
                           card-id={card.id}
                           customer-token={process.env.NEXT_PUBLIC_UNIT_TOKEN}
