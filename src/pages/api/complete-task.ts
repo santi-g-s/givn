@@ -26,16 +26,6 @@ export default async function handler(
   const taskDoc = await taskRef.get();
   const taskData = taskDoc.data();
 
-  // const cardRef = db
-  //   .collection("city")
-  //   .doc(req.body.cityId)
-  //   .collection("users")
-  //   .doc(user?.id || "")
-  //   .collection("cards")
-  //   .doc(req.body.cardId);
-  // const cardDoc = await cardRef.get();
-  // const cardData = cardDoc.data();
-
   if (!taskData) {
     return res.status(404).json({ error: "Task not found" });
   }
@@ -50,15 +40,7 @@ export default async function handler(
     },
     { merge: true }
   );
-  // batch.set(
-  //   cardRef,
-  //   {
-  //     amount: FieldValue.increment(taskData.amount),
-  //     updatedAt: FieldValue.serverTimestamp(),
-  //   },
-  //   { merge: true }
-  // );
   await batch.commit();
 
-  res.status(200);
+  res.status(200).json({});
 }
