@@ -6,8 +6,12 @@ import ProfilePage from '@/components/dashboard/profilePage';
 import CardsPage from '@/components/dashboard/cards';
 import { ActionsGrid } from '@/components/dashboard/learn';
 import { IconBuildingBank, IconCreditCard, IconBooks } from '@tabler/icons-react';
+import { AuthAction, withAuthUser } from 'next-firebase-auth';
+import { useAuth } from '@/contexts/AuthContext';
 
-export default function Shell() {
+const Dashboard = () => {
+
+  const auth = useAuth();
 
   const links = [
     { "link": "/dashboard/account", "label": "Account", icon: <IconBuildingBank />},
@@ -23,7 +27,7 @@ export default function Shell() {
     <AppShell
       padding="md"
       header={<Header height={60} p="xs">{
-        <HeaderResponsive links={links} activeLink={active} setActiveLink={setActive} />
+        <HeaderResponsive links={links} activeLink={active} setActiveLink={setActive} currentUser={auth?.currentUser}/>
       }</Header>}
       styles={(theme) => ({
         main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
@@ -38,4 +42,12 @@ export default function Shell() {
       
     </AppShell>
   );
-}
+};
+
+export default withAuthUser({
+  whenAuthed: AuthAction.RENDER,
+  whenAuthedBeforeRedirect: AuthAction.SHOW_LOADER,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: null,
+})(Dashboard);

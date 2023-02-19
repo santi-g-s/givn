@@ -42,10 +42,12 @@ export default function AccountPage({customerID} : AccountPageProps) {
       {
         (accountID != '') ? (
           <>
-            <Container mt='xl'>
+            <Container my='xl'>
               <Text className="text-gray-400">Account Balance</Text>
               <Text className="text-7xl my-5">{formatter.format(accountBalance)}</Text>
-            </Container><Container mt='xl'>
+            </Container>
+            <Space h="xl" />
+            <Container mt='xl'>
               <ActivityTable account_id={accountID} />
             </Container>
           </>

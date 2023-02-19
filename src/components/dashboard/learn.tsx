@@ -61,7 +61,7 @@ export function ActionsGrid() {
   ));
 
   return (
-    <Container>
+    <Container mt="xl">
         <Card withBorder radius="md" className={classes.card}>
         <Group position="apart">
             <Text className={classes.title}>Lessons</Text>

@@ -2,6 +2,7 @@ import { ReactComponentElement, useState } from 'react';
 import { createStyles, Header, Container, Group, Burger, Paper, Transition, Title, Text, Avatar, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUserCircle } from '@tabler/icons-react'
+import { User } from 'firebase/auth';
 
 const HEADER_HEIGHT = 60;
 
@@ -9,9 +10,10 @@ interface HeaderResponsiveProps {
   links: { link: string; label: string, icon: JSX.Element}[];
   activeLink: string;
   setActiveLink: (value: string) => void;
+  currentUser: User | null | undefined
 }
 
-export function HeaderResponsive({ links, activeLink, setActiveLink }: HeaderResponsiveProps) {
+export function HeaderResponsive({ links, activeLink, setActiveLink, currentUser }: HeaderResponsiveProps) {
   const [opened, { toggle, close }] = useDisclosure(false);
   const { classes, cx } = useStyles();
 
@@ -40,28 +42,29 @@ export function HeaderResponsive({ links, activeLink, setActiveLink }: HeaderRes
         <Title color={'blue'}>givn</Title>
         <Group spacing={5} className={classes.links}>
           {items}
-          
         </Group>
 
         <Group className={classes.links}>
-            <UnstyledButton className={classes.user} onClick={(event) => {
-                    event.preventDefault();
-                    setActiveLink('/dashboard/profile');
-                    close();
-                }}>
-                <Group>
-                <div style={{ flex: 1 }}>
-                    <Text size="sm" weight={500}>
-                        Profile
-                     </Text>
-
-                     <Text color="dimmed" size="xs">
-                        User Name
-                    </Text>
-                </div>
-                <Avatar src={"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"} radius="xl" />
+            <a
+              key={'profile'}
+              href={'/dashboard/profile'}
+              className={cx(classes.link, { [classes.linkActive]: activeLink === '/dashboard/profile' })}
+              onClick={(event) => {
+                event.preventDefault();
+                setActiveLink('/dashboard/profile');
+                close();
+              }}
+            >
+              {/* <div className="flex-col justify-center items-center text-right">
+                  <Text>Profile</Text>
+                  <Text className="text-xs text-gray-400">{currentUser?.email}</Text>
+              </div> */}
+                <Group noWrap position="center" spacing='xs'>
+                  <Text className="text-xs">{currentUser?.email}</Text>
+                  <IconUserCircle />
                 </Group>
-            </UnstyledButton>
+              
+            </a>
         </Group>
 
         
@@ -85,7 +88,7 @@ export function HeaderResponsive({ links, activeLink, setActiveLink }: HeaderRes
                 <Group noWrap position="center" spacing='xs'>
                   <IconUserCircle />
                   Profile
-              </Group>
+                </Group>
               </a>
             </Paper>
           )}
