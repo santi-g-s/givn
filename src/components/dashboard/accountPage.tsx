@@ -2,30 +2,35 @@ import { AppShell, Header, Container, Text, Title, Space, Table, Skeleton } from
 import axios from "axios"
 import ActivityTable from '@/components/dashboard/activity.jsx';
 import { useEffect, useState } from 'react';
+import handler from '@/pages/api/fetch-user/[pid]';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface AccountPageProps {
-  customerID: string
-}
-
-export default function AccountPage({customerID} : AccountPageProps) {
+export default function AccountPage() {
 
   const [accountID, setAccountID] = useState('');
   const [accountBalance, setAccountBalance] = useState(0);
 
+  const auth = useAuth();
+
   const fetchData = async () => {
-    const res =  await axios.get(`${process.env.NEXT_PUBLIC_UNIT_API_URL}/accounts?filter[customerId]=${customerID}`, {
+    if (!auth?.currentUser?.uid) {
+      return
+    }
+    const resAPI = await axios.get(`/api/fetch-user/${auth?.currentUser?.uid}`)
+    console.log(resAPI)
+    setAccountID(resAPI.data.user.accountId);
+
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_UNIT_API_URL}/accounts/${resAPI.data.user.accountId}`, {
       headers: {
         'Authorization': 'Bearer '+ process.env.NEXT_PUBLIC_UNIT_TOKEN
       }
     })
-    setAccountID(res.data.data[0].id);
-    setAccountBalance(parseInt(res.data.data[0].attributes.balance))
-    console.log(res.data.data[0]);
+    setAccountBalance(res.data.data.attributes.balance)
   }
 
   useEffect(() => {
     fetchData();
-    }, []
+    }, [auth?.currentUser]
   );
 
   const formatter = new Intl.NumberFormat('en-US', {
@@ -42,10 +47,12 @@ export default function AccountPage({customerID} : AccountPageProps) {
       {
         (accountID != '') ? (
           <>
-            <Container mt='xl'>
+            <Container my='xl'>
               <Text className="text-gray-400">Account Balance</Text>
-              <Text className="text-7xl my-5">{formatter.format(accountBalance)}</Text>
-            </Container><Container mt='xl'>
+              <Text className="text-7xl my-5 text-black">{formatter.format(accountBalance)}</Text>
+            </Container>
+            <Space h="xl" />
+            <Container mt='xl'>
               <ActivityTable account_id={accountID} />
             </Container>
           </>
