@@ -9,7 +9,8 @@ import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
-import { Timestamp } from "firebase/firestore";
+import Loader from "@/components/Loader";
+import PublicHeader from "@/components/dashboard/PublicHeader";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -112,6 +113,7 @@ const SignupPage = () => {
         <title>Givn | Sign Up</title>
         <meta name="description" content="Sign Up" />
       </Head>
+      <PublicHeader />
       <div className="flex flex-col h-screen justify-center items-center">
         <div className="bg-white min-w-[400px] border rounded-lg flex flex-col p-4 md:p-8 lg:p-12">
           <h1 className="text-2xl md:text-3xl lg:text-4xl text-center font-light pb-4 md:pb-8">
@@ -196,5 +198,5 @@ export default withAuthUser({
   whenAuthedBeforeRedirect: AuthAction.SHOW_LOADER,
   whenUnauthedBeforeInit: AuthAction.RENDER,
   whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: null,
+  LoaderComponent: Loader,
 })(SignupPage);
