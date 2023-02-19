@@ -5,8 +5,8 @@ const prod = process.env.NODE_ENV === "production";
 
 const initAuth = () => {
   init({
-    authPageURL: "/accounts/login",
-    appPageURL: "/profile",
+    authPageURL: "/login",
+    appPageURL: "/dashboard",
     loginAPIEndpoint: "/api/login", // required
     logoutAPIEndpoint: "/api/logout", // required
     onLoginRequestError: (err) => {
