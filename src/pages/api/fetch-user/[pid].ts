@@ -12,7 +12,6 @@ export default async function handler(
 ) {
   const { pid } = req.query;
 
-  console.log("pid", pid);
   const db = getFirestore();
 
   const userRef = db
