@@ -1,16 +1,29 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { Container, Skeleton, Space, Title, Text, Textarea, Group, TextInput, Avatar, Button, UnstyledButton, Modal } from '@mantine/core';
-import { IconInfoCircle } from '@tabler/icons-react';
-import { useState } from 'react';
-import { ImagePicker } from './dropzone';
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  Container,
+  Skeleton,
+  Space,
+  Title,
+  Text,
+  Textarea,
+  Group,
+  TextInput,
+  Avatar,
+  Button,
+  UnstyledButton,
+  Modal,
+} from "@mantine/core";
+import Link from "next/link";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useState } from "react";
+import { ImagePicker } from "./dropzone";
 
 export default function ProfilePage() {
-
   const auth = useAuth();
 
-  const [bio, setBio] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [bio, setBio] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const [showImagePicker, setShowImagePicker] = useState(false);
 
@@ -33,27 +46,29 @@ export default function ProfilePage() {
       </Container>
 
       <Container>
-        <UnstyledButton onClick={async () => {
-              setShowImagePicker(true);
-            }}>
-          <Avatar src="avatar.png" alt="it's me" size="xl"/>
+        <UnstyledButton
+          onClick={async () => {
+            setShowImagePicker(true);
+          }}
+        >
+          <Avatar src="avatar.png" alt="it's me" size="xl" />
         </UnstyledButton>
-        
       </Container>
 
       <Container my="xl">
-        <Text className="text-gray-400 text-sm">
-          Email
-        </Text>
-        <Text className="text-black">
-          {auth?.currentUser?.email}
-        </Text>
+        <Text className="text-gray-400 text-sm">Email</Text>
+        <Text className="text-black">{auth?.currentUser?.email}</Text>
       </Container>
 
       <Container my="xl">
-        <Text className="text-gray-400 text-sm">
-          First Name
-        </Text>
+        <Text className="text-gray-400 text-sm">Donation Link</Text>
+        <Link href={`/profile/${auth?.currentUser?.uid}`}>
+          <Text className="text-blue-500 hover:underline">{`https://givn-five.vercel.app/profile/${auth?.currentUser?.uid}`}</Text>
+        </Link>
+      </Container>
+
+      <Container my="xl">
+        <Text className="text-gray-400 text-sm">First Name</Text>
         <TextInput
           mt="sm"
           placeholder="First Name"
@@ -64,9 +79,7 @@ export default function ProfilePage() {
       </Container>
 
       <Container my="xl">
-        <Text className="text-gray-400 text-sm">
-          Last Name
-        </Text>
+        <Text className="text-gray-400 text-sm">Last Name</Text>
         <TextInput
           mt="sm"
           placeholder="Last Name"
@@ -78,14 +91,10 @@ export default function ProfilePage() {
 
       <Container my="xl">
         <div className="flex justify-between">
-          <Text className="text-gray-400 text-sm">
-            Biography
-          </Text>
-          <Text className="text-gray-400 text-sm">
-            {`${bio.length} / 250`}
-          </Text>
+          <Text className="text-gray-400 text-sm">Biography</Text>
+          <Text className="text-gray-400 text-sm">{`${bio.length} / 250`}</Text>
         </div>
-        
+
         <Textarea
           value={bio}
           onChange={(event) => setBio(event.currentTarget.value)}
@@ -101,9 +110,7 @@ export default function ProfilePage() {
       <Space h="xl" />
       <Container>
         <div className="flex justify-items-end">
-          <div className="grow">
-           
-          </div>  
+          <div className="grow"></div>
           <button
             onClick={async () => {
               await auth?.logout();
@@ -114,7 +121,6 @@ export default function ProfilePage() {
             Logout
           </button>
         </div>
-        
       </Container>
     </>
   );
