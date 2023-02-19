@@ -35,7 +35,7 @@ export default function GenerateQuizButton({loaded, setLoaded, onClick}: Generat
         }
 
       }),
-    50
+    100
   );
   return (
     <Button

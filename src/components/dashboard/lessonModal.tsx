@@ -90,7 +90,7 @@ export default function LessonModal({
   return (
     <Modal
       centered
-      size="100%"
+      size="xl"
       opened={currentTask != undefined}
       onClose={() => {
         setLoaded(false);
